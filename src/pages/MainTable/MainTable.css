@@ -1,0 +1,22 @@
+.column-header {
+    font-size: 20px;
+}
+
+.column-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.column-capital {
+    font-style: italic;
+}
+
+.column-flag {
+    display: flex;
+    align-items: center;
+}
+
+.column-population {
+    font-size: 20px;
+}
+
