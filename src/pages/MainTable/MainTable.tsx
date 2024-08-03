@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
+import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { Box, Container } from "@mui/material";
 import { ICountry, ICountryResponse } from "../../../types";
+import CountryInfoDialog from "../../components/CountryInfoDialog/CountryInfoDialog";
 
 const MainTable = () => {
   const [countries, setCountries] = useState<ICountry[]>([]);
+  const [openCountryInfo, setOpenCountryInfo] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
 
   useEffect(() => {
     const getCountries = async () => {
@@ -32,28 +35,47 @@ const MainTable = () => {
     {
       field: 'name',
       headerName: 'Name',
-      width: 150,
+      width: 175,
     },
     {
       field: 'capital',
       headerName: 'Capital',
-      width: 150,
+      width: 175,
     },
     {
       field: 'flag',
       headerName: 'Flag',
-      width: 150,
+      width: 175,
+      renderCell: (params) => (
+          <img
+            src={params.value}
+            alt={params.row.name}
+            style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+          />
+      )
     },
     {
       field: 'population',
       headerName: 'Population',
-      width: 100,
+      width: 125,
     },
   ];
 
+  const handleRowClick = (params: GridRowParams) => {
+    setSelectedCountry(params.row);
+    setOpenCountryInfo(true);
+  };
+
+  const handleClose = () => {
+    setOpenCountryInfo(false);
+  };
+
   return (
-      <Container maxWidth="xl">
-        <Box sx={{mt: 5, maxWidth: 800}}>
+      <Container
+          maxWidth="xl"
+          sx={{display: 'flex', justifyContent: 'center'}}
+      >
+        <Box sx={{mt: 5, maxWidth: 700}}>
           <DataGrid
               rows={countries}
               columns={columns}
@@ -64,8 +86,20 @@ const MainTable = () => {
                   },
                 },
               }}
+              rowHeight={100}
+              onRowClick={handleRowClick}
+              sx={{
+                '& .MuiDataGrid-cell:focus': {
+                  outline: 'none',
+                },
+              }}
           />
         </Box>
+        <CountryInfoDialog
+            open={openCountryInfo}
+            onClose={handleClose}
+            country={selectedCountry}
+        />
       </Container>
   );
 };
