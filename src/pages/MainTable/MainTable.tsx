@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { DataGrid, GridCellParams, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowParams } from "@mui/x-data-grid";
 import { Box, Container } from "@mui/material";
 import { ICountry, ICountryResponse } from "../../../types";
 import CountryInfoDialog from "../../components/CountryInfoDialog/CountryInfoDialog";
@@ -60,12 +60,8 @@ const MainTable = () => {
           <img
             src={params.value}
             alt={params.row.name}
-            style={{ width: '140px', height: '90px', objectFit: 'contain' }}
-            onClick={(event: React.MouseEvent<HTMLImageElement>) => {
-              event.stopPropagation();
-              setSelectedImage(params.value);
-              setOpenImageDialog(true);
-            }}
+            style={{ width: '140px', height: '90px' }}
+            onClick={event => handleImageClick(event, params)}
           />
       )
     },
@@ -83,6 +79,12 @@ const MainTable = () => {
     setOpenCountryDialog(true);
   };
 
+  const handleImageClick = (event: React.MouseEvent<HTMLImageElement>, params : GridRenderCellParams) => {
+    event.stopPropagation();
+    setSelectedImage(params.value);
+    setOpenImageDialog(true);
+  };
+
   const handleCloseCountryDialog = () => {
     setOpenCountryDialog(false);
   };
@@ -96,7 +98,7 @@ const MainTable = () => {
           maxWidth="xl"
           sx={{display: 'flex', justifyContent: 'center'}}
       >
-        <Box sx={{mt: 5, maxWidth: 700}}>
+        <Box sx={{my: 5, maxWidth: 700}}>
           <DataGrid
               rows={countries}
               columns={columns}
@@ -107,13 +109,9 @@ const MainTable = () => {
                   },
                 },
               }}
+              pageSizeOptions={[10, 25, 50]}
               rowHeight={100}
               onRowClick={handleRowClick}
-              sx={{
-                '& .MuiDataGrid-cell:focus': {
-                  outline: 'none',
-                },
-              }}
           />
         </Box>
         <CountryInfoDialog

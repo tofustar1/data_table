@@ -1,17 +1,22 @@
 import React from 'react';
-import { CssBaseline } from "@mui/material";
-import './App.css';
-import AppToolbar from "./components/AppToolbar/AppToolbar";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import MainTable from "./pages/MainTable/MainTable";
+import { useThemeContext } from "./providers/ThemeProvider/ThemeProvider";
+import AppToolbar from "./components/AppToolbar/AppToolbar";
 
-const App = () => (
+const App = () => {
+  const {theme, mode} = useThemeContext();
+
+  return (
     <>
-      <CssBaseline />
-      <AppToolbar/>
-      <main>
-        <MainTable/>
-      </main>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppToolbar/>
+        <main>
+          <MainTable/>
+        </main>
+      </ThemeProvider>
     </>
-);
+)};
 
 export default App;
